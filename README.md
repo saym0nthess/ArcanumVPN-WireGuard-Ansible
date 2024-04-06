@@ -16,7 +16,7 @@ This Ansible playbook is designed for setting up VPN servers with a comprehensiv
 
 1. **Update and Upgrade the System**
 ```
-   sudo apt update && sudo apt upgrade -y
+sudo apt update && sudo apt upgrade -y
    
 ```
 
