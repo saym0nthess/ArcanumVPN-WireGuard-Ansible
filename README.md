@@ -17,20 +17,16 @@ This Ansible playbook is designed for setting up VPN servers with a comprehensiv
 1. **Update and Upgrade the System**
 ```
 sudo apt update && sudo apt upgrade -y
-   
 ```
 
 2. **Install Ansible**
 ```
 sudo apt install ansible -y
-
 ```
 
 3. **Run the Playbook**
    - Ensure you have an inventory file ready (e.g., `/path/to/your/inventory/file`).
    - Execute the playbook:
 ```
-
-ansible-playbook -i /path/to/your/inventory/file setup_vpn_servers.yml
-     
+ansible-playbook -i /path/to/your/inventory/playbook.yaml
 ```
