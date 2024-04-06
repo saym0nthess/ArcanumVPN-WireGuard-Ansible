@@ -1,0 +1,54 @@
+- name: ArcanumVPN-WireGuard-Ansible
+  hosts: vpn_servers
+  become: yes
+  tasks:
+    - name: Update and upgrade all packages
+      apt:
+        update_cache: yes
+        upgrade: full
+        autoremove: yes
+        autoclean: yes
+        cache_valid_time: 3600
+
+    - name: Full system update and clean
+      ansible.builtin.shell: |
+        apt update -y && apt full-upgrade -y && apt autoremove -y && apt clean -y && apt autoclean -y
+      args:
+        warn: false
+      become: yes
+
+    - name: Install WireGuard
+      apt:
+        name: wireguard
+        state: present
+      become: yes
+
+    - name: Disable and stop rsyslog
+      systemd:
+        name: rsyslog
+        enabled: no
+        state: stopped
+
+    - name: Disable and stop syslog
+      systemd:
+        name: syslog
+        enabled: no
+        state: stopped
+      ignore_errors: yes
+
+    - name: Remove all existing log files
+      ansible.builtin.shell: |
+        rm -rf /var/log/*
+      args:
+        warn: false
+      become: yes
+
+    - name: Schedule daily reboot and cleanup
+      ansible.builtin.cron:
+        name: "Daily reboot and cleanup"
+        special_time: daily
+        hour: 2
+        minute: 0
+        job: "journalctl --vacuum-time=1s && rm -rf /var/log/* /tmp/* && shutdown -r now"
+        cron_file: daily_reboot_cleanup
+        user: root
